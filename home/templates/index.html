@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+  <title>Glass Effect Login and Sign-up Form</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),url('{% static 'myimages/wall.jpg' %}');
+      background-size: cover;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      text-align: center;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px); /* Apply a blur effect to the background */
+      width: 400px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .tab-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      padding: 10px 20px;
+      background-color: rgba(255, 255, 255, 0.3);
+      color: #fff;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-right: 10px;
+    }
+
+    .tab.active {
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .tab-content {
+      display: none;
+      padding: 20px;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: none;
+      background-color: rgba(255, 255, 255, 0.5);
+      border-radius: 5px;
+      outline: none;
+      color: #333;
+      font-size: 16px;
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .input-group label {
+      flex: 1;
+      text-align: left;
+      color: #fff;
+      margin-right: 10px;
+    }
+
+    .input-group input {
+      flex: 2;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      background-color: #3498db;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    /* Add a subtle animation effect to the form container */
+    @keyframes fadeInOut {
+      0% {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .container {
+      animation: fadeInOut 1s ease-in-out;
+    }
+
+    /* Additional styles for gender radio buttons */
+    .gender-label {
+      display: inline-block;
+      margin-right: 10px;
+      color: #fff;
+    }
+
+    .gender-input {
+      margin-right: 5px;
+    }
+
+  </style>
+</head>
+<body>
+ <div class="container">
+    <h1 style="display: inline-block; color:white">Yoga Instructor</h1>
+    <h2>{{ incorrect }}</h2>
+    <div class="tab-container">
+      <div class="tab active" onclick="toggleForm('login')">Login</div>
+      <div class="tab" onclick="toggleForm('signup')">Sign-up</div>
+    </div>
+    <div class="tab-content active" id="loginForm">
+      <form action="{% url 'login' %}" method="POST">
+        {% csrf_token %}
+        <input type="text" placeholder="Username" name="uname" required>
+        <input type="password" placeholder="Password" name="passw" required>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+    <div class="tab-content" id="signupForm">
+      <form action="{% url 'signup'%}" method="POST">
+        {% csrf_token %}
+        <input type="text" placeholder="Full Name" name="name" required>
+        <input type="number" placeholder="Age" name="age" required>
+        <div class="gender-label">Gender:</div>
+        <label class="gender-label">
+          <input class="gender-input" type="radio" name="gender" value="male" required>Male
+        </label>
+        <label class="gender-label">
+          <input class="gender-input" type="radio" name="gender" value="female" required>Female
+        </label>
+        <label class="gender-label">
+          <input class="gender-input" type="radio" name="gender" value="other" required>Other
+        </label>
+        <input type="number" placeholder="Weight" name="weight" required> <!-- Add weight input -->
+        <input type="text" placeholder="Username" name="uname" required>
+        <input type="password" placeholder="Password" name="passw" required>
+        <button type="submit">Sign-up</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function toggleForm(formType) {
+      const loginForm = document.getElementById("loginForm");
+      const signupForm = document.getElementById("signupForm");
+
+      if (formType === "login") {
+        loginForm.classList.add("active");
+        signupForm.classList.remove("active");
+      } else {
+        loginForm.classList.remove("active");
+        signupForm.classList.add("active");
+      }
+    }
+
+    function login(event) {
+      event.preventDefault();
+      const username = event.target.querySelector('input[type="text"]').value;
+      const password = event.target.querySelector('input[type="password"]').value;
+      console.log("Login - Username:", username);
+      console.log("Login - Password:", password);
+      // Implement your login logic here ...
+      event.target.reset();
+    }
+
+    function signup(event) {
+      event.preventDefault();
+      const fullName = event.target.querySelector('input[placeholder="Full Name"]').value;
+      const age = event.target.querySelector('input[placeholder="Age"]').value;
+      const gender = event.target.querySelector('input[name="gender"]:checked').value;
+      const weight = event.target.querySelector('input[placeholder="Weight"]').value; // Capture weight value
+      const username = event.target.querySelector('input[placeholder="Username"]').value;
+      const password = event.target.querySelector('input[placeholder="Password"]').value;
+      console.log("Sign-up - Full Name:", fullName);
+      console.log("Sign-up - Age:", age);
+      console.log("Sign-up - Gender:", gender);
+      console.log("Sign-up - Weight:", weight); // Log weight value
+      console.log("Sign-up - Username:", username);
+      console.log("Sign-up - Password:", password);
+      // Implement your sign-up logic here ...
+      event.target.reset();
+    }
+  </script>
+</body></html>
